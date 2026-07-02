@@ -1,0 +1,18 @@
+# Site-facing constants. When finance.yahoo.co.jp changes, edit here, not Python.
+# Endpoint details: docs/research/yahoo-forum-api.md
+forum:
+  # Server-rendered page. Fetched once per run: sets cookies and embeds the JWT.
+  # {code} WITH market suffix, e.g. "285A.T".
+  page_url: "https://finance.yahoo.co.jp/quote/{code}/forum"
+  # Comments JSON API (the infinite-scroll XHR). {code} WITHOUT suffix, e.g. "285A".
+  # Optional &mid={part} paginates (inclusive cursor — dedupe by part).
+  api_url: "https://finance.yahoo.co.jp/bff-quote-stocks/v1/ajax/bbs/comment?code={code}&size={size}"
+  # Requires headers: x-jwt-token (from page HTML), referer (= page_url), user-agent.
+  jwt_pattern: 'jwtToken\\":\\"([^"\\]+)'
+  jwt_fallback_pattern: 'eyJhbGciOiJIUzI1NiJ9\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+'
+  max_page_size: 50
+  default_market_suffix: ".T"
+
+http:
+  user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"
+  timeout_seconds: 10
