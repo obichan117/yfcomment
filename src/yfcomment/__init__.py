@@ -2,17 +2,18 @@
 
 Public API:
 
-    from yfcomment import get_forum, get_comments, Forum, Comment
+    from yfcomment import get_forum, get_comments, get_ranking, Forum, Comment, RankEntry
 
     forum = get_forum("285A", limit=20)
     comments = get_comments("285A", limit=20)
+    ranking = get_ranking("daily", limit=20)
 """
 
-from yfcomment.models import Comment, Forum
-from yfcomment._internal.fetch import fetch_forum
-from yfcomment._internal.parse import parse_comments, parse_poll
+from yfcomment.models import Comment, Forum, RankEntry
+from yfcomment._internal.fetch import RANKING_TERMS, fetch_forum, fetch_ranking
+from yfcomment._internal.parse import parse_comments, parse_poll, parse_ranking
 
-__all__ = ["Comment", "Forum", "get_comments", "get_forum"]
+__all__ = ["Comment", "Forum", "RankEntry", "get_comments", "get_forum", "get_ranking"]
 
 
 def get_forum(code: str, limit: int = 20) -> Forum:
@@ -38,3 +39,17 @@ def get_comments(code: str, limit: int = 20) -> list[Comment]:
     Comments are ordered newest first.
     """
     return get_forum(code, limit=limit).comments
+
+
+def get_ranking(term: str = "daily", limit: int = 20) -> list[RankEntry]:
+    """Fetch the BBS comment-count ranking (most-commented stocks).
+
+    `term` is one of "daily", "weekly", "monthly" (daily by default).
+    Returns the top `limit` entries. No post counts are exposed by the
+    site — entries are ordered by rank, with price and last-forum-activity
+    time only.
+    """
+    if term not in RANKING_TERMS:
+        raise ValueError(f"unknown ranking term: {term!r} (expected one of {RANKING_TERMS})")
+    raw = fetch_ranking(term, limit=limit)
+    return parse_ranking(raw)[:limit]

@@ -13,6 +13,16 @@ forum:
   max_page_size: 50
   default_market_suffix: ".T"
 
+# BBS comment ranking (掲示板投稿数ランキング). Server-rendered; the data sits in an
+# embedded `window.__PRELOADED_STATE__` JSON under key "mainRankingList".
+# No JWT/cookies needed. Details: docs/research/yahoo-forum-api.md
+ranking:
+  page_url: "https://finance.yahoo.co.jp/stocks/ranking/bbs?market={market}&term={term}&page={page}"
+  default_market: "all"
+  terms: ["daily", "weekly", "monthly"]
+  page_size: 50
+  state_prefix: "window.__PRELOADED_STATE__ = "
+
 # CSS class prefix of the element holding the thread sentiment poll's
 # screen-reader text summary ("強く買いたい 26.83%、買いたい 2.44%、…").
 selectors:

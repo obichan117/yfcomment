@@ -81,3 +81,52 @@ Fallback: `eyJhbGciOiJIUzI1NiJ9\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+`
 Playwright headless Chromium, `page.on("response")` filtered to xhr/fetch, auto-scroll
 to trigger infinite scroll. Script preserved conceptually in this doc's git history;
 re-run if the endpoint starts returning 400 with valid tokens (signature/header change).
+
+---
+
+# BBS comment ranking (掲示板投稿数ランキング)
+
+Status: **captured and verified with a plain HTTP client** (2026-07-03, headless
+capture + urllib reproduction).
+
+## Source
+
+```
+GET https://finance.yahoo.co.jp/stocks/ranking/bbs?market=all&term={daily|weekly|monthly}&page={1,2,...}
+```
+
+- **No XHR/JSON API exists** — the page fires only ad/tracking requests. The table is
+  server-rendered with the data embedded in `window.__PRELOADED_STATE__` (a JS
+  assignment inside a `<script>`; parse with `json.JSONDecoder().raw_decode` starting
+  after `window.__PRELOADED_STATE__ = `).
+- **No JWT, no cookies needed** — a plain GET with a browser User-Agent works
+  (verified for monthly page 2).
+- 50 rows per page; daily/weekly had `totalSize: 95`, monthly 93 (~2 pages).
+
+## Embedded state shape
+
+`state["mainRankingList"]`:
+
+```json
+{
+  "results": [
+    {
+      "rank": "1",                       // string
+      "stockCode": "285A",
+      "marketName": "東証PRM",
+      "stockName": "キオクシアホールディングス(株)",
+      "detailLink": "https://finance.yahoo.co.jp/quote/285A.T",
+      "bbsUrl": "https://finance.yahoo.co.jp/quote/285A.T/forum",
+      "savePrice": "83,300",             // display string, comma separators
+      "date": "15:30",                   // price timestamp
+      "rankingResult": { "bbsContents": { "updateDateTime": "2026/07/03 19:03" }, ...all-null fields... }
+    }
+  ],
+  "paging": { "hasNext": true, "totalPage": 2, "totalSize": 95, "page": 1, "size": 50,
+              "startIndex": 1, "endIndex": 50, "displayedPageNumbers": [1, 2] }
+}
+```
+
+Notes: the ranking does NOT expose post counts — order + `bbsContents.updateDateTime`
+(last BBS activity) is all there is. `savePrice` and `rank` are strings.
+Fixture: `tests/fixtures/ranking_state.json` (one real `mainRankingList`, 50 entries).

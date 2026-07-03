@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 
 import pytest
 
-from yfcomment import get_comments
+from yfcomment import get_comments, get_ranking
 
 pytestmark = pytest.mark.slow
 
@@ -39,3 +39,20 @@ def test_get_comments_crosses_pagination_boundary():
 def test_get_comments_different_code():
     comments = get_comments("7203", limit=5)
     assert len(comments) == 5
+
+
+def test_get_ranking_crosses_pagination_boundary():
+    entries = get_ranking(limit=60)
+    assert len(entries) == 60
+    ranks = [e.rank for e in entries]
+    assert ranks == list(range(1, 61))
+
+
+def test_get_ranking_monthly():
+    entries = get_ranking("monthly", limit=5)
+    assert len(entries) == 5
+
+
+def test_get_ranking_bad_term_raises():
+    with pytest.raises(ValueError):
+        get_ranking("bogus")

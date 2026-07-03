@@ -24,6 +24,22 @@ class Comment:
 
 
 @dataclass(frozen=True)
+class RankEntry:
+    """One row in the BBS comment-count ranking."""
+
+    rank: int
+    code: str
+    name: str
+    market: str
+    price: str | None
+    updated_at: str | None
+    forum_url: str
+
+    def to_dict(self) -> dict:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
 class Forum:
     """A stock forum thread: the sentiment poll header plus its comments."""
 

@@ -7,10 +7,11 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-from yfcomment._internal.parse import parse_comments, parse_poll
+from yfcomment._internal.parse import parse_comments, parse_poll, parse_ranking
 
 _FIXTURE = Path(__file__).parent / "fixtures" / "comment_api_response.json"
 _POLL_FIXTURE = Path(__file__).parent / "fixtures" / "evaluation_graph.html"
+_RANKING_FIXTURE = Path(__file__).parent / "fixtures" / "ranking_state.json"
 
 
 def _load_raw() -> dict:
@@ -75,3 +76,37 @@ def test_parse_poll_absent_returns_none():
 def test_parse_poll_never_raises_on_garbage():
     assert parse_poll("") is None
     assert parse_poll("<<<not even html") is None
+
+
+def _load_ranking_raw() -> dict:
+    fx = json.loads(_RANKING_FIXTURE.read_text())
+    return {"results": fx["results"], "totalSize": fx["paging"]["totalSize"], "term": "daily"}
+
+
+def test_parse_ranking_returns_expected_count():
+    entries = parse_ranking(_load_ranking_raw())
+    assert len(entries) == 50
+
+
+def test_parse_ranking_ranks_in_order():
+    entries = parse_ranking(_load_ranking_raw())
+    ranks = [e.rank for e in entries]
+    assert ranks == list(range(1, 51))
+
+
+def test_parse_ranking_first_entry_populated():
+    entries = parse_ranking(_load_ranking_raw())
+    first = entries[0]
+    assert first.code
+    assert first.name
+    assert first.forum_url
+
+
+def test_rank_entry_to_dict_roundtrips_through_json():
+    entries = parse_ranking(_load_ranking_raw())
+    for e in entries:
+        d = e.to_dict()
+        encoded = json.dumps(d, ensure_ascii=False)
+        decoded = json.loads(encoded)
+        assert decoded["rank"] == e.rank
+        assert decoded["code"] == e.code

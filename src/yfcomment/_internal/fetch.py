@@ -5,6 +5,7 @@ Rules (see .claude/CLAUDE.md):
 - URLs, headers, and timeouts come from config.yaml, not literals.
 """
 
+import json
 import re
 from pathlib import Path
 
@@ -12,6 +13,8 @@ import httpx
 import yaml
 
 _CONFIG = yaml.safe_load((Path(__file__).parent / "config.yaml").read_text())
+
+RANKING_TERMS: list[str] = _CONFIG["ranking"]["terms"]
 
 
 def normalize_code(code: str) -> str:
@@ -113,4 +116,57 @@ def fetch_forum(code: str, limit: int = 20) -> dict:
         "threadId": thread_id,
         "totalSize": total_size,
         "page_html": page_html,
+    }
+
+
+def fetch_ranking(term: str, limit: int) -> dict:
+    """Fetch raw BBS comment-ranking content for a term ("daily"/"weekly"/"monthly").
+
+    Flow: GET the server-rendered ranking pages (no JWT/cookies needed),
+    starting at page 1, extracting the embedded `window.__PRELOADED_STATE__`
+    JSON from each page's HTML and pulling out `mainRankingList`. Stops once
+    `limit` results have been collected or all pages have been fetched
+    (never requests a page beyond `totalPage`).
+
+    Returns the merged raw results plus size: {"results", "totalSize", "term"}.
+    """
+    ranking_cfg = _CONFIG["ranking"]
+    http_cfg = _CONFIG["http"]
+
+    market = ranking_cfg["default_market"]
+    state_prefix = ranking_cfg["state_prefix"]
+    user_agent = http_cfg["user_agent"]
+    timeout = http_cfg["timeout_seconds"]
+
+    collected: list[dict] = []
+    total_size = None
+    total_page = 1
+    page = 1
+
+    with httpx.Client(
+        headers={"user-agent": user_agent}, timeout=timeout, follow_redirects=True
+    ) as client:
+        while len(collected) < limit and page <= total_page:
+            url = ranking_cfg["page_url"].format(market=market, term=term, page=page)
+            resp = client.get(url)
+            resp.raise_for_status()
+            html = resp.text
+
+            idx = html.find(state_prefix)
+            if idx == -1:
+                raise ValueError(f"could not find embedded ranking state in page: {url}")
+
+            state = json.JSONDecoder().raw_decode(html[idx + len(state_prefix) :])[0]
+            ranking_list = state["mainRankingList"]
+            paging = ranking_list["paging"]
+
+            collected.extend(ranking_list["results"])
+            total_size = paging["totalSize"]
+            total_page = paging["totalPage"]
+            page += 1
+
+    return {
+        "results": collected,
+        "totalSize": total_size,
+        "term": term,
     }

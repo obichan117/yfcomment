@@ -4,7 +4,7 @@ from rich import box
 from rich.table import Table
 from rich.text import Text
 
-from yfcomment.models import Comment
+from yfcomment.models import Comment, RankEntry
 
 
 def _votes_cell(comment: Comment) -> Text:
@@ -49,5 +49,32 @@ def build_table(
         if show_user:
             row.append(comment.username)
         table.add_row(*row)
+
+    return table
+
+
+def build_rank_table(entries: list[RankEntry]) -> Table:
+    """Build the BBS ranking table.
+
+    Columns: rank, code, name (truncated to fit), market, price, last post time.
+    """
+    table = Table(box=box.SIMPLE, expand=True)
+
+    table.add_column("#", justify="right", no_wrap=True)
+    table.add_column("Code", no_wrap=True)
+    table.add_column("Name", overflow="ellipsis", no_wrap=True, ratio=1)
+    table.add_column("Market", style="dim", no_wrap=True)
+    table.add_column("Price", justify="right", no_wrap=True)
+    table.add_column("Last post", style="dim", no_wrap=True)
+
+    for entry in entries:
+        table.add_row(
+            str(entry.rank),
+            entry.code,
+            entry.name,
+            entry.market,
+            entry.price or "",
+            entry.updated_at or "",
+        )
 
     return table

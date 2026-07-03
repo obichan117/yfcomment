@@ -7,7 +7,7 @@ from pathlib import Path
 import yaml
 from bs4 import BeautifulSoup
 
-from yfcomment.models import Comment
+from yfcomment.models import Comment, RankEntry
 
 _CONFIG = yaml.safe_load((Path(__file__).parent / "config.yaml").read_text())
 
@@ -45,6 +45,24 @@ def parse_comments(raw: dict) -> list[Comment]:
     ]
     comments.sort(key=lambda c: c.number, reverse=True)
     return comments
+
+
+def parse_ranking(raw: dict) -> list[RankEntry]:
+    """Parse a merged ranking JSON dict (as returned by `fetch_ranking`) into
+    RankEntries, preserving site order (rank 1 first).
+    """
+    return [
+        RankEntry(
+            rank=int(item["rank"]),
+            code=item["stockCode"],
+            name=item["stockName"],
+            market=item["marketName"],
+            price=item.get("savePrice") or None,
+            updated_at=item.get("rankingResult", {}).get("bbsContents", {}).get("updateDateTime"),
+            forum_url=item["bbsUrl"],
+        )
+        for item in raw["results"]
+    ]
 
 
 def parse_poll(page_html: str) -> dict[str, float] | None:
