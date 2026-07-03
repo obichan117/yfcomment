@@ -1,6 +1,6 @@
 [project]
 name = "yfcomment"
-version = "0.2.0"
+version = "0.2.1"
 description = "Yahoo Finance Japan stock forum comments and BBS rankings in your terminal"
 readme = "README.md"
 license = "MIT"
@@ -27,11 +27,19 @@ dependencies = [
     "pyyaml>=6.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/obichan117/yfcomment"
+Documentation = "https://obichan117.github.io/yfcomment/"
+Repository = "https://github.com/obichan117/yfcomment"
+Issues = "https://github.com/obichan117/yfcomment/issues"
+
 [project.scripts]
 yfc = "yfcomment.cli:run"
 
 [dependency-groups]
 dev = [
+    "mkdocs-material>=9.7.6",
+    "mkdocstrings[python]>=1.0.4",
     "pytest>=8.0",
     "ruff>=0.6",
 ]

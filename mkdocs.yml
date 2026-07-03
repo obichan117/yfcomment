@@ -1,0 +1,46 @@
+site_name: yfcomment
+site_description: Yahoo Finance Japan stock forum comments and BBS rankings in your terminal
+site_url: https://obichan117.github.io/yfcomment/
+repo_url: https://github.com/obichan117/yfcomment
+repo_name: obichan117/yfcomment
+
+theme:
+  name: material
+  features:
+    - content.code.copy
+    - navigation.sections
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: false
+            show_root_heading: true
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - tables
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - CLI Reference: cli.md
+  - Python API: api.md
+  - Research Notes: research/yahoo-forum-api.md
