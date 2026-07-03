@@ -10,10 +10,18 @@ no PyPI/MkDocs/CI yet.
 ```bash
 uv sync
 uv run yfc 285A                  # latest 20 comments
+uv run yfc rank -w               # weekly BBS ranking
 uv run pytest --tb=short         # fast tests
 uv run pytest -m slow            # live network tests
 uv run ruff check --select F401,F841
+uv run mkdocs build --strict     # docs (auto-deployed to gh-pages on push)
 ```
+
+Links: [PyPI](https://pypi.org/project/yfcomment/) ·
+[GitHub](https://github.com/obichan117/yfcomment) ·
+[Docs](https://obichan117.github.io/yfcomment/)
+Release: bump version in pyproject.toml, `uv build`, then
+`uv run --with twine twine upload dist/* -u __token__ -p $PYPI_TOKEN`, tag + push.
 
 ## Architecture
 
