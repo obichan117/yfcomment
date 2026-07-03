@@ -1,7 +1,11 @@
 # yfcomment
 
-Yahoo Finance Japan stock forum comments (掲示板) in your terminal — no more scrolling
-a UI that shows 3 comments per screen.
+[![PyPI version](https://img.shields.io/pypi/v/yfcomment.svg)](https://pypi.org/project/yfcomment/)
+[![Python versions](https://img.shields.io/pypi/pyversions/yfcomment.svg)](https://pypi.org/project/yfcomment/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+Yahoo Finance Japan stock forum comments (掲示板) and BBS rankings in your terminal —
+no more scrolling a UI that shows 3 comments per screen.
 
 ```bash
 yfc 285A                 # latest 20 comments, compact table
@@ -17,10 +21,10 @@ yfc rank -n 60 -w        # top 60 weekly (paginates automatically)
 yfc rank -m --json       # monthly, JSON: {"term", "entries"}
 ```
 
-## Install (local)
+## Install
 
 ```bash
-uv tool install .
+uv tool install yfcomment   # or: pip install yfcomment
 ```
 
 ## Python API
