@@ -1,0 +1,809 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Yahoo Finance Japan stock forum comments and BBS rankings in your terminal">
+      
+      
+      
+        <link rel="canonical" href="https://obichan117.github.io/yfcomment/research/yahoo-forum-api/">
+      
+      
+        <link rel="prev" href="../../api/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Research Notes - yfcomment</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#yahoo-finance-japan-forum-comments-api-reverse-engineered" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="yfcomment" class="md-header__button md-logo" aria-label="yfcomment" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            yfcomment
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Research Notes
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/obichan117/yfcomment" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    obichan117/yfcomment
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="yfcomment" class="md-nav__button md-logo" aria-label="yfcomment" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    yfcomment
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/obichan117/yfcomment" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    obichan117/yfcomment
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Notes
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#required-headers-all-three-else-http-400" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required headers (all three, else HTTP 400)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#token-acquisition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token acquisition
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#response-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response shape
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes-for-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes for implementation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capture-method-for-future-re-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture method (for future re-verification)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#required-headers-all-three-else-http-400" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required headers (all three, else HTTP 400)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#token-acquisition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token acquisition
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#response-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response shape
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes-for-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes for implementation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capture-method-for-future-re-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture method (for future re-verification)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="yahoo-finance-japan-forum-comments-api-reverse-engineered">Yahoo Finance Japan — forum comments API (reverse-engineered)</h1>
+<p>Status: <strong>captured and verified with a plain HTTP client</strong> (2026-07-03, via headless
+Chromium network capture + urllib reproduction). No browser needed at runtime.</p>
+<h2 id="endpoint">Endpoint</h2>
+<div class="highlight"><pre><span></span><code>GET https://finance.yahoo.co.jp/bff-quote-stocks/v1/ajax/bbs/comment?code={CODE}&amp;size={N}[&amp;mid={CURSOR}]
+</code></pre></div>
+<ul>
+<li><code>code</code> — <strong>bare</strong> stock code, no market suffix: <code>285A</code>, <code>7203</code> (the page URL uses
+  <code>285A.T</code>, the API does not).</li>
+<li><code>size</code> — comments per call. 20 is what the site uses; <strong>50 verified working</strong>.</li>
+<li><code>mid</code> — pagination cursor, a comment number (<code>part</code>). Omit for the newest page.
+  <strong>Inclusive</strong>: <code>mid=1273352</code> returns items starting at part <code>1273352</code> — dedupe by
+  <code>part</code> when paging (comment numbers also have gaps from deletions).</li>
+</ul>
+<h3 id="required-headers-all-three-else-http-400">Required headers (all three, else HTTP 400)</h3>
+<table>
+<thead>
+<tr>
+<th>Header</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>x-jwt-token</code></td>
+<td>short-lived JWT extracted from the forum page HTML (see below)</td>
+</tr>
+<tr>
+<td><code>referer</code></td>
+<td><code>https://finance.yahoo.co.jp/quote/{CODE}.T/forum</code></td>
+</tr>
+<tr>
+<td><code>user-agent</code></td>
+<td>any realistic browser UA</td>
+</tr>
+</tbody>
+</table>
+<p>Cookies (<code>A</code>/<code>XA</code>/<code>B</code>/<code>XB</code>) are set by the page fetch; keep a cookie jar across the
+two requests (verified working with them; not tested without).</p>
+<h3 id="token-acquisition">Token acquisition</h3>
+<p>The JWT sits in the forum page HTML inside escaped embedded JSON as
+<code>jwtToken\":\"eyJ...\"</code>. Payload is only <code>{"exp": &lt;unix&gt;}</code> (~2h validity, HS256).
+Flow: 1 GET of the page per CLI run → regex out the token → call the API.</p>
+<p>Extraction regex (against raw HTML): <code>jwtToken\\":\\"([^"\\]+)</code>
+Fallback: <code>eyJhbGciOiJIUzI1NiJ9\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+</code></p>
+<h2 id="response-shape">Response shape</h2>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;isSuccess&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;response&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;categoryId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1835673&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;threadId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3cbb9fa0a454194f0d07b74acd145222&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;totalSize&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1273235</span><span class="p">,</span><span class="w">          </span><span class="c1">// ≈ newest comment number, not an exact count</span>
+<span class="w">    </span><span class="nt">&quot;isError&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;part&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1273154</span><span class="p">,</span><span class="w">           </span><span class="c1">// comment number (No.xxxxxxx), descending</span>
+<span class="w">        </span><span class="nt">&quot;userId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;d5e3b9bd...&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1">// stable hash</span>
+<span class="w">        </span><span class="nt">&quot;userIcon&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://s.yimg.jp/...png&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;dispname&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;しろうと&quot;</span><span class="p">,</span><span class="w">     </span><span class="c1">// display name (not masked, unlike page render)</span>
+<span class="w">        </span><span class="nt">&quot;infoLink&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://finance.yahoo.co.jp/cm/personal/history/comment?user=...&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;アップルが中国製メモリーの調達&amp;hellip;&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1">// truncated, HTML entities</span>
+<span class="w">        </span><span class="nt">&quot;body&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;span data-themeid=\&quot;1212\&quot;&gt;アップル&lt;/span&gt;が...&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// HTML: strip tags, unescape entities</span>
+<span class="w">        </span><span class="nt">&quot;postDate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026/7/3 7:32&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;good&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w">                 </span><span class="c1">// 「参考になりましたか？」はい</span>
+<span class="w">        </span><span class="nt">&quot;bad&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="w">                   </span><span class="c1">//                       いいえ</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="notes-for-implementation">Notes for implementation</h2>
+<ul>
+<li><code>body</code> is HTML — strip tags (<code>&lt;span data-themeid&gt;</code>, <code>&lt;a&gt;</code>) and unescape entities
+  for terminal display.</li>
+<li><strong>No per-comment sentiment field.</strong> The 買いたい tags seen on the page are a
+  thread-level sentiment poll (e.g. 強く買いたい 26.83%、買いたい 2.44%) rendered in an
+  <code>_EvaluationGraph</code> element in the page HTML. Optional nice-to-have: parse it from
+  the page we already fetch for the JWT and print it as a header line.
+  → <code>Comment.sentiment</code> will be <code>None</code> from this API.</li>
+<li>Comment permalink: <code>https://finance.yahoo.co.jp/quote/{CODE}.T/forum</code> has no
+  per-comment anchor confirmed yet; <code>infoLink</code> links to the author's history instead.</li>
+</ul>
+<h2 id="capture-method-for-future-re-verification">Capture method (for future re-verification)</h2>
+<p>Playwright headless Chromium, <code>page.on("response")</code> filtered to xhr/fetch, auto-scroll
+to trigger infinite scroll. Script preserved conceptually in this doc's git history;
+re-run if the endpoint starts returning 400 with valid tokens (signature/header change).</p>
+<hr />
+<h1 id="bbs-comment-ranking">BBS comment ranking (掲示板投稿数ランキング)</h1>
+<p>Status: <strong>captured and verified with a plain HTTP client</strong> (2026-07-03, headless
+capture + urllib reproduction).</p>
+<h2 id="source">Source</h2>
+<div class="highlight"><pre><span></span><code>GET https://finance.yahoo.co.jp/stocks/ranking/bbs?market=all&amp;term={daily|weekly|monthly}&amp;page={1,2,...}
+</code></pre></div>
+<ul>
+<li><strong>No XHR/JSON API exists</strong> — the page fires only ad/tracking requests. The table is
+  server-rendered with the data embedded in <code>window.__PRELOADED_STATE__</code> (a JS
+  assignment inside a <code>&lt;script&gt;</code>; parse with <code>json.JSONDecoder().raw_decode</code> starting
+  after <code>window.__PRELOADED_STATE__ =</code>).</li>
+<li><strong>No JWT, no cookies needed</strong> — a plain GET with a browser User-Agent works
+  (verified for monthly page 2).</li>
+<li>50 rows per page; daily/weekly had <code>totalSize: 95</code>, monthly 93 (~2 pages).</li>
+</ul>
+<h2 id="embedded-state-shape">Embedded state shape</h2>
+<p><code>state["mainRankingList"]</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;results&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;rank&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="w">                       </span><span class="c1">// string</span>
+<span class="w">      </span><span class="nt">&quot;stockCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;285A&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;marketName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;東証PRM&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;stockName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;キオクシアホールディングス(株)&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;detailLink&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://finance.yahoo.co.jp/quote/285A.T&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;bbsUrl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://finance.yahoo.co.jp/quote/285A.T/forum&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;savePrice&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;83,300&quot;</span><span class="p">,</span><span class="w">             </span><span class="c1">// display string, comma separators</span>
+<span class="w">      </span><span class="nt">&quot;date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;15:30&quot;</span><span class="p">,</span><span class="w">                   </span><span class="c1">// price timestamp</span>
+<span class="w">      </span><span class="nt">&quot;rankingResult&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;bbsContents&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;updateDateTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026/07/03 19:03&quot;</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="err">...all</span><span class="mi">-</span><span class="kc">null</span><span class="w"> </span><span class="kc">f</span><span class="err">ields...</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;paging&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;hasNext&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;totalPage&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;totalSize&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">95</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;page&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;size&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;startIndex&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;endIndex&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;displayedPageNumbers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Notes: the ranking does NOT expose post counts — order + <code>bbsContents.updateDateTime</code>
+(last BBS activity) is all there is. <code>savePrice</code> and <code>rank</code> are strings.
+Fixture: <code>tests/fixtures/ranking_state.json</code> (one real <code>mainRankingList</code>, 50 entries).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.sections"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
