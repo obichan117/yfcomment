@@ -1,6 +1,6 @@
 # TASK-005: Test suite
 
-**Status**: todo
+**Status**: done
 **Priority**: medium
 **Delegation**: implementer
 
@@ -20,10 +20,10 @@ fast offline tests for parsing.
   assert exit 0 and valid JSON of length 5.
 
 ## Acceptance Criteria
-- [ ] `uv run pytest --tb=short -m "not slow"` passes offline in <5s
-- [ ] `uv run pytest -m slow --tb=short` passes (live)
-- [ ] No mocking of HTTP anywhere
-- [ ] `uv run ruff check --select F401,F841` clean
+- [x] `uv run pytest --tb=short -m "not slow"` passes offline in <5s
+- [x] `uv run pytest -m slow --tb=short` passes (live)
+- [x] No mocking of HTTP anywhere
+- [x] `uv run ruff check --select F401,F841` clean
 
 ## Notes
 Depends on TASK-002/003/004.

@@ -1,6 +1,6 @@
 # TASK-003: Parse layer (`_internal/parse.py`)
 
-**Status**: todo
+**Status**: done
 **Priority**: high
 **Delegation**: implementer
 
@@ -22,11 +22,11 @@ Field mapping (details in `docs/research/yahoo-forum-api.md`):
 Sort output newest first by `number`.
 
 ## Acceptance Criteria
-- [ ] Parsing the fixture yields 20 `Comment`s with correct number/username/votes
-- [ ] `text` contains no `<`, `>`, or HTML entities for every fixture item
-- [ ] `posted_at` is a real `datetime` matching the fixture's `postDate`
-- [ ] No `httpx`/network imports in parse.py
-- [ ] `uv run ruff check --select F401,F841` clean
+- [x] Parsing the fixture yields 20 `Comment`s with correct number/username/votes
+- [x] `text` contains no `<`, `>`, or HTML entities for every fixture item
+- [x] `posted_at` is a real `datetime` matching the fixture's `postDate`
+- [x] No `httpx`/network imports in parse.py
+- [x] `uv run ruff check --select F401,F841` clean
 
 ## Notes
 Runs fully offline — parallelizable with TASK-002.

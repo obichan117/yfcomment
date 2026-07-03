@@ -21,3 +21,19 @@ class Comment:
         d = asdict(self)
         d["posted_at"] = self.posted_at.isoformat()
         return d
+
+
+@dataclass(frozen=True)
+class Forum:
+    """A stock forum thread: the sentiment poll header plus its comments."""
+
+    code: str
+    poll: dict[str, float] | None  # label -> percent, site order (e.g. {"強く買いたい": 26.83, ...})
+    comments: list[Comment]
+
+    def to_dict(self) -> dict:
+        return {
+            "code": self.code,
+            "poll": self.poll,
+            "comments": [c.to_dict() for c in self.comments],
+        }

@@ -1,6 +1,6 @@
 # TASK-004: CLI + terminal rendering (`cli.py`, `_internal/render.py`)
 
-**Status**: todo
+**Status**: done
 **Priority**: high
 **Delegation**: implementer
 
@@ -24,11 +24,11 @@ Implement the Typer command body in `cli.py` (flags already declared) and
   exit code 1. No tracebacks for expected failures.
 
 ## Acceptance Criteria
-- [ ] `uv run yfc 285A` renders a table of 20 comments (live)
-- [ ] `-n 50`, `--no-user`, `--no-votes`, `--full` each visibly work (live)
-- [ ] `uv run yfc 285A --json | python3 -c "import json,sys; json.load(sys.stdin)"` passes
-- [ ] `uv run yfc NOSUCHCODE1234` exits 1 with a clean one-line error
-- [ ] `uv run ruff check --select F401,F841` clean
+- [x] `uv run yfc 285A` renders a table of 20 comments (live)
+- [x] `-n 50`, `--no-user`, `--no-votes`, `--full` each visibly work (live)
+- [x] `uv run yfc 285A --json | python3 -c "import json,sys; json.load(sys.stdin)"` passes
+- [x] `uv run yfc NOSUCHCODE1234` exits 1 with a clean one-line error
+- [x] `uv run ruff check --select F401,F841` clean
 
 ## Notes
 Depends on TASK-002 + TASK-003 being merged (needs a working `get_comments`).

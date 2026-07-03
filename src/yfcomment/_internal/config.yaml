@@ -13,6 +13,11 @@ forum:
   max_page_size: 50
   default_market_suffix: ".T"
 
+# CSS class prefix of the element holding the thread sentiment poll's
+# screen-reader text summary ("強く買いたい 26.83%、買いたい 2.44%、…").
+selectors:
+  poll_class_prefix: "_EvaluationGraph__invisible"
+
 http:
   user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"
   timeout_seconds: 10

@@ -1,6 +1,6 @@
 # TASK-002: Fetch layer (`_internal/fetch.py`)
 
-**Status**: todo
+**Status**: done
 **Priority**: high
 **Delegation**: implementer
 
@@ -23,11 +23,11 @@ Required functions:
   (TASK-006): include it as `{"page_html": ...}` in the returned dict.
 
 ## Acceptance Criteria
-- [ ] `fetch_forum("285A", limit=20)` returns ≥20 raw items (live)
-- [ ] `fetch_forum("285A", limit=120)` paginates: ≥120 unique `part` values (live)
-- [ ] Bare numeric codes work: `fetch_forum("7203", limit=5)` (live)
-- [ ] No parsing/Comment construction; no config literals in Python
-- [ ] `uv run ruff check --select F401,F841` clean
+- [x] `fetch_forum("285A", limit=20)` returns ≥20 raw items (live)
+- [x] `fetch_forum("285A", limit=120)` paginates: ≥120 unique `part` values (live)
+- [x] Bare numeric codes work: `fetch_forum("7203", limit=5)` (live)
+- [x] No parsing/Comment construction; no config literals in Python
+- [x] `uv run ruff check --select F401,F841` clean
 
 ## Notes
 API returns 400 when any of the three headers is missing — do not "simplify" them away.
